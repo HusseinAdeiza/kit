@@ -35,6 +35,10 @@ describe('getU8Codec', () => {
         assertRangeError(rangeErrorValues, u8(), MAX + 1);
         assertRangeError(rangeErrorValues, u8(), BigInt(MIN - 1));
         assertRangeError(rangeErrorValues, u8(), BigInt(MAX + 1));
+
+        // `NaN` compares false against both bounds, so it has to be rejected explicitly rather
+        // than slipping through as an in-range value that encodes to `00`.
+        assertRangeError(rangeErrorValues, u8(), NaN);
     });
 
     it('has the right size', () => {

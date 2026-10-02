@@ -52,6 +52,11 @@ describe('getShortU16Codec', () => {
         assertRangeError(rangeErrorValues, shortU16(), BigInt(MIN - 1));
         assertRangeError(rangeErrorValues, shortU16(), BigInt(MAX + 1));
 
+        // `NaN` compares false against both bounds, so it has to be rejected explicitly rather
+        // than slipping through as an in-range value. It would otherwise size itself as three
+        // bytes and encode to `000000`.
+        assertRangeError(rangeErrorValues, shortU16(), NaN);
+
         // Assert re-serialization.
         const codec = shortU16();
         for (let i = 0; i <= 0b1111111111111111; i += 1) {

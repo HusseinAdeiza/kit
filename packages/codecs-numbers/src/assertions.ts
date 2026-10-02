@@ -31,7 +31,10 @@ export function assertNumberIsBetweenForCodec(
     max: bigint | number,
     value: bigint | number,
 ) {
-    if (value < min || value > max) {
+    // Written as a negated range check rather than `value < min || value > max` so that `NaN` is
+    // rejected too: both orderings are false for `NaN`, so the disjunction above would be false
+    // and let it through as an in-range value.
+    if (!(value >= min && value <= max)) {
         throw new SolanaError(SOLANA_ERROR__CODECS__NUMBER_OUT_OF_RANGE, {
             codecDescription,
             max,

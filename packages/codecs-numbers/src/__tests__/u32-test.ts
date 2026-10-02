@@ -62,6 +62,11 @@ describe('getU32Codec', () => {
         assertRangeError(rangeErrorValues, u32BE, BigInt(MIN - 1));
         assertRangeError(rangeErrorValues, u32LE, BigInt(MAX + 1));
         assertRangeError(rangeErrorValues, u32BE, BigInt(MAX + 1));
+
+        // `NaN` compares false against both bounds, so it has to be rejected explicitly rather
+        // than slipping through as an in-range value that encodes to `00000000`.
+        assertRangeError(rangeErrorValues, u32LE, NaN);
+        assertRangeError(rangeErrorValues, u32BE, NaN);
     });
 
     it('has the right size', () => {
